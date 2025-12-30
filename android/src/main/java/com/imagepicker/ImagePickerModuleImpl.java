@@ -125,19 +125,22 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
         boolean isPhoto = this.options.mediaType.equals(mediaTypePhoto);
         boolean isVideo = this.options.mediaType.equals(mediaTypeVideo);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            if (isSingleSelect && (isPhoto || isVideo)) {
+//         boolean beforeTIRAMISU = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU;
+        boolean beforeTIRAMISU = true;
+
+        if (beforeTIRAMISU) {
+//             if (isSingleSelect && (isPhoto || isVideo)) {
                 libraryIntent = new Intent(Intent.ACTION_PICK);
-            } else {
-                libraryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                libraryIntent.addCategory(Intent.CATEGORY_OPENABLE);
-            }
+//             } else {
+//                 libraryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                 libraryIntent.addCategory(Intent.CATEGORY_OPENABLE);
+//             }
         } else {
             libraryIntent = new Intent(MediaStore.ACTION_PICK_IMAGES);
         }
 
         if (!isSingleSelect) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            if (beforeTIRAMISU) {
                 libraryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             } else {
                 if (selectionLimit != 1) {
@@ -152,7 +155,7 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
             libraryIntent.setType("image/*");
         } else if (isVideo) {
             libraryIntent.setType("video/*");
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+        } else if (beforeTIRAMISU) {
             libraryIntent.setType("*/*");
             libraryIntent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"image/*", "video/*"});
         }
